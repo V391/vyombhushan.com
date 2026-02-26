@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reality of Text-to-SQL at Scale — Vyom Bhushan</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #111113;
+  --text: #f0f0f0;
+  --text-muted: #8a8a8e;
+  --accent: #c4f540;
+  --accent-dim: #c4f54025;
+  --border: #222226;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+.dot-grid {
+  position: fixed; inset: 0; z-index: 0;
+  background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  padding: 20px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  backdrop-filter: blur(20px);
+  background: #0a0a0bcc;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700; font-size: 1.4rem;
+  color: var(--accent); letter-spacing: -1px;
+  text-decoration: none;
+}
+
+.back-link {
+  color: var(--text-muted); text-decoration: none;
+  font-size: 0.85rem; font-weight: 500;
+  transition: color 0.3s;
+}
+.back-link:hover { color: var(--accent); }
+
+article {
+  position: relative; z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 140px 40px 100px;
+}
+
+.article-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+article h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.article-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-body h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 48px 0 16px;
+}
+
+.article-body h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 32px 0 12px;
+}
+
+.article-body p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.article-body strong { color: var(--text); font-weight: 600; }
+
+.article-body code {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.article-body pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+.article-body pre code {
+  background: none; border: none; padding: 0;
+  font-size: 0.82rem; line-height: 1.7;
+}
+
+.article-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: var(--accent-dim);
+  border-radius: 0 10px 10px 0;
+}
+
+.article-body blockquote p {
+  color: var(--text);
+  font-style: italic;
+  margin: 0;
+}
+
+.article-body ul, .article-body ol {
+  padding-left: 24px;
+  margin-bottom: 20px;
+}
+
+.article-body li {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+
+.placeholder-notice {
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 48px;
+  text-align: center;
+}
+
+.placeholder-notice .icon { font-size: 2.5rem; margin-bottom: 16px; }
+
+.placeholder-notice h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.placeholder-notice p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  article { padding: 120px 20px 60px; }
+  nav { padding: 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="dot-grid"></div>
+
+<nav>
+  <a href="../index.html" class="logo">VB</a>
+  <a href="../index.html#blog" class="back-link">← Back to site</a>
+</nav>
+
+<article>
+  <div class="article-meta">Jan 31, 2026 · Text-to-SQL</div>
+  <h1>The Reality of Text-to-SQL at Scale: Cost, Latency, and What Actually Works</h1>
+  <p class="article-subtitle">A deep dive into what happens when you try to ship NL-to-SQL in production — the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
+
+  <div class="article-body">
+    <div class="placeholder-notice">
+      <div class="icon">📝</div>
+      <h3>Article content goes here</h3>
+      <p>Paste your Medium article content into this template.<br>The styling is ready — just replace this block with your HTML content.</p>
+    </div>
+  </div>
+</article>
+
+</body>
+</html>

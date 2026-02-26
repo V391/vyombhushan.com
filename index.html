@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vyom Bhushan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0b'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%23c4f540' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0b;
+  --bg-card: #111113;
+  --bg-card-hover: #18181b;
+  --text: #f0f0f0;
+  --text-muted: #8a8a8e;
+  --accent: #c4f540;
+  --accent-dim: #c4f54025;
+  --border: #222226;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--bg); }
+
+/* ─── Dot Grid Background ─── */
+.dot-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: #0a0a0bcc;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--accent);
+  letter-spacing: -1px;
+}
+
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* ─── Sections ─── */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 0 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ─── Hero ─── */
+.hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.hero-monogram {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(6rem, 18vw, 14rem);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #ffffff15;
+  line-height: 0.85;
+  position: absolute;
+  right: -2%;
+  top: 18%;
+  user-select: none;
+  pointer-events: none;
+}
+
+.hero-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+
+.hero h1 {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+
+.hero h1 span { color: var(--accent); }
+
+.hero-tagline {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-muted);
+  font-weight: 300;
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+
+.btn {
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px #c4f54040; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ─── Section Headers ─── */
+.section-header {
+  padding-top: 120px;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+
+.section-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+/* ─── About ─── */
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.about-intro {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.profile-photo {
+  width: 130px;
+  height: 130px;
+  min-width: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 15%;
+  border: 2px solid var(--accent);
+  display: block;
+}
+
+.about-text {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.about-text strong { color: var(--text); font-weight: 600; }
+
+.about-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  transition: all 0.3s;
+}
+.stat-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+.stat-card .number {
+  font-family: 'Space Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.stat-card .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ─── Skills ─── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.skill-pill {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 14px 22px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: default;
+}
+.skill-pill:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ─── Experience Cards (Akash style) ─── */
+.exp-scroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.exp-scroll::-webkit-scrollbar { display: none; }
+
+.exp-card {
+  flex: 0 0 380px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  scroll-snap-align: start;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.exp-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.exp-card:hover::before { transform: scaleX(1); }
+.exp-card:hover { border-color: #333; transform: translateY(-6px); }
+
+.exp-card .company {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.exp-card h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.exp-card .role {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.exp-card .period {
+  font-size: 0.75rem;
+  color: #555;
+  font-family: 'Space Mono', monospace;
+  margin-bottom: 18px;
+}
+
+.exp-card .highlight {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.exp-card .highlight strong { color: var(--text); font-weight: 500; }
+
+/* ─── Projects ─── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.project-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  transition: all 0.4s;
+  position: relative;
+}
+.project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+.project-card .icon {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.project-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.project-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.project-card .tech-tags {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-tag {
+  font-size: 0.7rem;
+  font-family: 'Space Mono', monospace;
+  padding: 5px 12px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-radius: 50px;
+}
+
+/* ─── Pieces of Me (Flip Cards) ─── */
+.pieces-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.flip-card {
+  perspective: 800px;
+  height: 220px;
+  cursor: default;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  text-align: center;
+}
+
+.flip-card-front {
+  background: var(--bg-card);
+}
+
+.flip-card-front .piece-icon {
+  font-size: 2.2rem;
+  margin-bottom: 16px;
+}
+
+.flip-card-front h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.flip-card-back {
+  background: var(--bg-card);
+  border-color: var(--accent);
+  transform: rotateY(180deg);
+}
+
+.flip-card-back p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+@media (max-width: 768px) {
+  .pieces-grid { grid-template-columns: 1fr 1fr; }
+  .flip-card { height: 200px; }
+}
+
+/* ─── Contact ─── */
+.contact-section {
+  padding-top: 120px;
+  padding-bottom: 100px;
+  text-align: center;
+}
+
+.contact-section h2 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+.contact-section p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 300;
+  margin-bottom: 40px;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+.contact-link svg { width: 18px; height: 18px; }
+
+/* ─── Marquee ─── */
+.marquee-section {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-track {
+  display: inline-flex;
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-track span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 40px;
+  letter-spacing: 0.5px;
+}
+
+.marquee-track span::after {
+  content: '·';
+  color: var(--accent);
+  padding-left: 40px;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Footer ─── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 40px;
+  text-align: center;
+}
+
+.footer-location {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: #444;
+}
+
+/* ─── Scroll Animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Case Study Cards ─── */
+.case-studies-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.case-study {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.case-study:hover { border-color: #333; transform: translateY(-4px); }
+.case-study::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.case-study:hover::before { transform: scaleX(1); }
+
+.case-study .cs-company {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.case-study h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 20px;
+}
+
+.case-study .cs-block { margin-bottom: 16px; }
+
+.case-study .cs-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.case-study .cs-text {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+.case-study .cs-text strong { color: var(--text); font-weight: 500; }
+
+.case-study .cs-impact {
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: var(--accent-dim);
+  border-radius: 10px;
+  font-size: 0.84rem;
+  color: var(--accent);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.case-study .tech-tags { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ─── Blog Section ─── */
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 600px;
+}
+
+.blog-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  transition: all 0.4s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.blog-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.blog-card::after {
+  content: '→';
+  position: absolute;
+  top: 36px; right: 36px;
+  font-size: 1.2rem;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s;
+}
+.blog-card:hover::after { opacity: 1; transform: translateX(0); }
+
+.blog-card .blog-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.blog-card h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 12px;
+  padding-right: 30px;
+}
+
+.blog-card p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.blog-card .blog-tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+.blog-placeholder {
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+}
+
+.blog-placeholder .bp-icon { font-size: 2rem; margin-bottom: 16px; opacity: 0.4; }
+.blog-placeholder p { color: var(--text-muted); font-size: 0.85rem; font-weight: 300; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  section, nav, footer { padding-left: 20px; padding-right: 20px; }
+  nav { padding: 16px 20px; }
+  .nav-links { gap: 20px; }
+  .nav-links a { font-size: 0.78rem; }
+  .hero-monogram { display: none; }
+  .about-content { grid-template-columns: 1fr; gap: 40px; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .case-studies-grid { grid-template-columns: 1fr; }
+  .blog-grid { grid-template-columns: 1fr; }
+  .exp-card { flex: 0 0 300px; }
+  .contact-links { flex-direction: column; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="dot-grid"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">VB</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">My Work</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+    <a href="resume.pdf" target="_blank" style="color: var(--accent);">Resume ↓</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-monogram">VB</div>
+  <div class="hero-label">Data &bull; Product &bull; AI & Analytics</div>
+  <h1>Vyom<br>Bhushan<span>.</span></h1>
+  <p class="hero-tagline">
+    Builder-Scaler in product and growth analytics. I design and scale data systems that turn ambiguity into measurable growth.
+  </p>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="section-header reveal">
+    <h2>A bit about me.</h2>
+  </div>
+  <div class="about-content reveal">
+    <div class="about-intro">
+      <img src="profile.jpg" alt="Vyom Bhushan" class="profile-photo">
+      <div class="about-text">
+        I'm Vyom. I've been the <strong>sole data hire at a startup that scaled to 1M users</strong>, caught fraud that was quietly bleeding $100K/month, shipped a <strong>SaaS product to $2M ARR</strong> at a global consulting firm, and built scoring models that changed how an entire sales org prioritises outreach.<br><br>
+        I work across the data full stack: <strong>experimentation, propensity models, analytics engineering, AI workflows</strong>. I'm most useful when things are ambiguous, the data is messy, and someone needs to figure out what to measure and why it matters.
+      </div>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="number">6+</div>
+        <div class="label">Years in Data & Analytics</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">30%</div>
+        <div class="label">Conversion Lift (Best)</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">$125M</div>
+        <div class="label">Monthly GTV Managed</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">1M+</div>
+        <div class="label">Users Tracked & Analysed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-header reveal">
+    <h2>Where Curiosity Led Me</h2>
+    <p>A peek into the places I've explored, learned, and contributed</p>
+  </div>
+  <div class="exp-scroll reveal">
+
+    <div class="exp-card">
+      <div class="company">Allica Bank</div>
+      <h3>Conversion & AI Ops</h3>
+      <div class="role">Sr. Analytics Engineer, Growth</div>
+      <div class="period">Jan 2024 - Present &bull; London (Remote)</div>
+      <div class="highlight">
+        Built <strong>XGBoost propensity models</strong> increasing conversions by 30%. Created customer scoring framework boosting RM outreach success by <strong>45%</strong>. Shipped an internal <strong>RAG-based AI assistant</strong> as single source of truth.
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="company">CheQ</div>
+      <h3>Founding Data Team</h3>
+      <div class="role">Lead Data Analyst, Product</div>
+      <div class="period">Jul 2022 - Dec 2023 &bull; Bangalore</div>
+      <div class="highlight">
+        <strong>10th employee</strong>. Sole data person for year 1. Architected entire analytics stack. Designed A/B test on fees → <strong>$800k/mo</strong> in platform revenue. Built fraud model saving <strong>$100k/mo</strong>. Scaled to <strong>1M+ users</strong>.
+      </div>
+    </div>
+
+    <div class="exp-card">
+      <div class="company">ZS Associates</div>
+      <h3>0-to-1 SaaS Product (ZAIDYN)</h3>
+      <div class="role">Senior Product Analyst</div>
+      <div class="period">Jan 2021 - Sep 2022 &bull; San Francisco (Remote)</div>
+      <div class="highlight">
+        Built and launched <strong>Budget Planner</strong> within ZS's ZAIDYN platform, helping pharma companies optimize marketing spend. Product Owner for team of 30. Reached <strong>$2M ARR</strong> in Year 1 with Fortune 500 clients.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-header reveal">
+    <h2>Work I'm Proud Of</h2>
+    <p>From the trenches</p>
+  </div>
+
+  <!-- Work Case Studies -->
+  <div class="case-studies-grid reveal">
+    <div class="case-study">
+      <div class="cs-company">CheQ</div>
+      <h3>Event Tracking & Onboarding Diagnostics</h3>
+      <div class="cs-block">
+        <div class="cs-label">The Problem</div>
+        <div class="cs-text">With 1M+ users onboarding, there was <strong>no structured event tracking</strong> - zero visibility into where users were dropping off or why.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">What I Built</div>
+        <div class="cs-text">Deployed a Segment-style event tracking architecture using <strong>mParticle</strong>, funneling behavioural data into <strong>BigQuery</strong>. This became the foundation for funnel analysis, cohort retention, and feature adoption tracking across the org.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">The Incident</div>
+        <div class="cs-text">The funnel revealed a <strong>50% drop-off at the onboarding page</strong> itself - far above expected. I built a step-by-step customer funnel to diagnose. Turned out <strong>half the users weren't receiving their OTPs</strong> for sign-up. The issue was on the SMS provider's end. Got it escalated and fixed - onboarding completion recovered immediately.</div>
+      </div>
+      <div class="cs-impact">Event tracking became the backbone of all product decisions. The OTP fix alone recovered ~50% of lost sign-ups overnight.</div>
+      <div class="tech-tags">
+        <span class="tech-tag">mParticle</span>
+        <span class="tech-tag">BigQuery</span>
+        <span class="tech-tag">Metabase</span>
+        <span class="tech-tag">Figma</span>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <div class="cs-company">CheQ</div>
+      <h3>Fraud Analysis - Rewards Engine Exploit</h3>
+      <div class="cs-block">
+        <div class="cs-label">The Problem</div>
+        <div class="cs-text">Reward burn was running at <strong>7–8x forecast</strong>. Unit economics weren't making sense at the cohort level. There was no fraud team, no monitoring, no alerts.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">What I Found</div>
+        <div class="cs-text"><strong>~7% of users were driving 55% of total reward burn</strong> through two mechanisms - duplicate accounts exploiting referral bonuses, and transaction reversals made after rewards had already been earned. This was quietly bleeding the business model.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">The Hard Part</div>
+        <div class="cs-text">Overcorrecting risked adding friction for legitimate users and slowing growth. Undercorrecting meant letting an incentive design flaw compound. That tension shaped every stakeholder conversation.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">What I Built</div>
+        <div class="cs-text">Analysis in BigQuery using <strong>mParticle event data</strong> cross-referenced in Looker. Detection: device fingerprinting, behavioural clustering for duplicates, reversal-to-reward timestamp mapping. Designed a <strong>rules-based flagging system</strong> (device ID matching, reversal frequency thresholds, redemption velocity triggers). Redesigned onboarding to block duplicates. Set up <strong>automated Slack alerts</strong> and a Metabase dashboard for ops.</div>
+      </div>
+      <div class="cs-impact">~$100K/month saved in reward burn. No noticeable retention impact. Gave leadership confidence in unit economics ahead of Series A.</div>
+      <div class="tech-tags">
+        <span class="tech-tag">BigQuery</span>
+        <span class="tech-tag">mParticle</span>
+        <span class="tech-tag">Looker</span>
+        <span class="tech-tag">Metabase</span>
+        <span class="tech-tag">Slack</span>
+      </div>
+    </div>
+    <div class="case-study">
+      <div class="cs-company">ZS Associates / ZAIDYN</div>
+      <h3>0-to-1 SaaS Product: Budget Planner</h3>
+      <div class="cs-block">
+        <div class="cs-label">The Problem</div>
+        <div class="cs-text">Pharma commercial teams were planning marketing budgets in spreadsheets. No way to model channel-level ROI, no scenario simulation, no shared view across brands. ZS had deep consulting expertise in marketing mix but <strong>no self-serve product</strong> clients could use independently.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">What I Did</div>
+        <div class="cs-text">I was the cross-functional glue between <strong>product, engineering and design</strong> on a team of 30. Defined the success metrics, designed the analytical models underpinning budget optimization, and owned the product roadmap. Spent most of my time translating what Fortune 500 pharma stakeholders needed into specs engineers could build against.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">The Tradeoff</div>
+        <div class="cs-text">Building for pharma means navigating compliance, slow procurement cycles and stakeholders who think in PowerPoint, not product. The constant tension was between shipping fast to prove SaaS viability for ZS and building robust enough to survive enterprise scrutiny. We chose to ship narrow and deep rather than broad and shallow.</div>
+      </div>
+      <div class="cs-impact">$2M ARR in Year 1. Budget Planner is now a live product in the ZAIDYN Marketplace, used across 65+ countries.</div>
+      <div class="tech-tags">
+        <span class="tech-tag">AWS</span>
+        <span class="tech-tag">Marketing Mix</span>
+        <span class="tech-tag">SaaS</span>
+        <span class="tech-tag">Product Strategy</span>
+      </div>
+    </div>
+    <div class="case-study">
+      <div class="cs-company">Allica Bank</div>
+      <h3>Customer Scoring Framework</h3>
+      <div class="cs-block">
+        <div class="cs-label">The Problem</div>
+        <div class="cs-text">Growth and Sales teams were prioritising RM outreach <strong>manually with no consistent ranking</strong>. A lot of time was being spent trying to convert low-value customers. No one agreed on what a valuable customer looked like or when to reach out.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">What I Built</div>
+        <div class="cs-text">Designed a composite scoring model combining <strong>opportunity signals</strong> (balance growth, wallet share, transaction volume, card activity, savings) with timing and engagement signals (call connect rates, email engagement, recency, primary account behaviour). Each component was individually scored and exposed, not black-boxed.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">Data Quality</div>
+        <div class="cs-text">Built end-to-end quality checks, reconciliation logic across sources (HubSpot, CASS, balances), and guardrails to prevent silent row drops. Ensured every dashboard output was <strong>defensible to senior stakeholders</strong>.</div>
+      </div>
+      <div class="cs-block">
+        <div class="cs-label">The Tradeoff</div>
+        <div class="cs-text">A simpler score would have shipped faster but wouldn't have earned trust. RMs needed to understand why a customer ranked high, not just that they did. Exposing each component individually meant more complexity to build, but it gave stakeholders a score they could interrogate and believe in.</div>
+      </div>
+      <div class="cs-impact">Gave RMs a single trusted ranking. Replaced broad manual targeting with data-driven prioritisation. Outreach success improved by 45%.</div>
+      <div class="tech-tags">
+        <span class="tech-tag">BigQuery</span>
+        <span class="tech-tag">HubSpot</span>
+        <span class="tech-tag">Metabase</span>
+        <span class="tech-tag">SQL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Blog -->
+<section id="blog">
+  <div class="section-header reveal">
+    <h2>The Build Log</h2>
+    <p>What I'm learning, building and shipping</p>
+  </div>
+  <div class="blog-grid reveal">
+    <a href="blog/text-to-sql.html" class="blog-card">
+      <div class="blog-date">Jan 31, 2026</div>
+      <h3>The Reality of Text-to-SQL at Scale: Cost, Latency, and What Actually Works</h3>
+      <p>A deep dive into what happens when you try to ship NL-to-SQL in production - the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
+      <div class="blog-tags">
+        <span class="tech-tag">Text-to-SQL</span>
+        <span class="tech-tag">LLMs</span>
+        <span class="tech-tag">Production AI</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Pieces of Me -->
+<section id="pieces">
+  <div class="section-header reveal">
+    <h2>Pieces Of Me</h2>
+    <p>A glimpse into the shades that define who I am</p>
+  </div>
+  <div class="pieces-grid reveal">
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <h4>The Data Detective</h4>
+        </div>
+        <div class="flip-card-back">
+          <p>Fraud nobody was looking for, OTP failures hiding in plain sight, pipelines silently dropping rows. I find what's broken before it becomes a crisis.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <h4>The Experimenter</h4>
+        </div>
+        <div class="flip-card-back">
+          <p>From A/B tests to life decisions, I believe in letting data guide the way. Bayesian at heart, curious by nature.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <h4>The Builder</h4>
+        </div>
+        <div class="flip-card-back">
+          <p>Whether it's a 0-to-1 product or an analytics stack from scratch, I thrive on creating something from nothing.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <h4>The Storyteller</h4>
+        </div>
+        <div class="flip-card-back">
+          <p>Numbers don't move people, narratives do. I turn data into the kind of story that gets executives to act, whether it's sizing fraud in dollars or making a score stakeholders trust.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact-section" id="contact">
+  <div class="reveal">
+    <h2>Let's Connect<span style="color:var(--accent)">.</span></h2>
+    <p>Always up for a conversation about data, AI, or the next big thing.</p>
+    <div class="contact-links">
+      <a href="mailto:vyom.s.bhushan@gmail.com" class="contact-link">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Email Me
+      </a>
+      <a href="https://www.linkedin.com/in/vyom-bhushan/" target="_blank" class="contact-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://www.github.com/v391" target="_blank" class="contact-link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span>More is lost by indecision than a wrong decision</span>
+    <span>Action leads to motivation, not the other way round</span>
+    <span>If something is 99% done, it's closer to 0% than 100%</span>
+    <span>Cost of inaction is an exponentially increasing function</span>
+    <span>Decline is slow, but the collapse is sudden</span>
+    <span>Impatience with actions, patience with results</span>
+    <span>More is lost by indecision than a wrong decision</span>
+    <span>Action leads to motivation, not the other way round</span>
+    <span>If something is 99% done, it's closer to 0% than 100%</span>
+    <span>Cost of inaction is an exponentially increasing function</span>
+    <span>Decline is slow, but the collapse is sudden</span>
+    <span>Impatience with actions, patience with results</span>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-location">📍 Based in India</div>
+  <div class="footer-copy">&copy; 2025 Vyom Bhushan</div>
+  <div class="footer-copy" style="margin-top: 6px; color: #333;">built with curiosity & caffeine</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth nav highlight
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
