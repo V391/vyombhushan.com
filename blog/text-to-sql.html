@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reality of Text-to-SQL at Scale — Vyom Bhushan</title>
+<title>The Reality of Text-to-SQL at Scale - Vyom Bhushan</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0b'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%23c4f540' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -166,25 +167,46 @@ article h1 {
   margin-bottom: 8px;
 }
 
-.placeholder-notice {
-  background: var(--bg-card);
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  padding: 48px;
-  text-align: center;
+.article-body li strong { color: var(--text); }
+
+.article-footer {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
 }
 
-.placeholder-notice .icon { font-size: 2.5rem; margin-bottom: 16px; }
-
-.placeholder-notice h3 {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
+.article-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  transition: all 0.3s;
 }
 
-.placeholder-notice p {
+.article-footer a:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.tag-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.tag-list span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
   color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 300;
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
 @media (max-width: 768px) {
@@ -203,16 +225,324 @@ article h1 {
 </nav>
 
 <article>
-  <div class="article-meta">Jan 31, 2026 · Text-to-SQL</div>
+  <div class="article-meta">Jan 31, 2026 · 7 min read</div>
   <h1>The Reality of Text-to-SQL at Scale: Cost, Latency, and What Actually Works</h1>
-  <p class="article-subtitle">A deep dive into what happens when you try to ship NL-to-SQL in production — the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
+  <p class="article-subtitle">A deep dive into what happens when you try to ship NL-to-SQL in production - the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
 
   <div class="article-body">
-    <div class="placeholder-notice">
-      <div class="icon">📝</div>
-      <h3>Article content goes here</h3>
-      <p>Paste your Medium article content into this template.<br>The styling is ready — just replace this block with your HTML content.</p>
+
+    <h2>Introduction</h2>
+    <blockquote><p>"Just ask your database questions in plain English."</p></blockquote>
+    <p>This has been the Holy Grail of business intelligence for two decades. Every few years, a new technology promises to finally make it real: natural language processing in the 2000s, voice assistants in the 2010s, and now LLMs.</p>
+    <p>With GPT-4 and Claude able to write complex code, surely text-to-SQL is finally solved, right?</p>
+    <p>I spent a weekend building a proof-of-concept to find out. Spoiler: It worked beautifully for exactly 10 queries. Then reality hit.</p>
+    <p>This is the story of what I built, where it breaks at scale, and what I discovered about how production systems actually solve this. The gap between demo and production taught me more than the build itself.</p>
+
+    <h2>Part 1: What I Built</h2>
+
+    <h3>The Architecture</h3>
+    <p>I built a text-to-SQL agent with a straightforward architecture:</p>
+    <p><strong>Frontend:</strong> Streamlit chat interface<br>
+    <strong>Orchestration:</strong> LangChain managing workflow<br>
+    <strong>Brain:</strong> Claude Sonnet 4 for reasoning<br>
+    <strong>Database:</strong> SQLite with synthetic SaaS data (1,000 users, 50K+ transactions)</p>
+
+    <p><strong>The three-step workflow:</strong></p>
+    <ol>
+      <li>User asks question in natural language</li>
+      <li>Claude generates SQL query</li>
+      <li>Execute query and create visualization</li>
+      <li>Return results with explanation</li>
+    </ol>
+
+    <h3>The User Experience</h3>
+<pre><code>User: "Show me monthly revenue trends for the last 2 years"
+
+Agent:
+- Generates SQL query
+- Executes against database
+- Creates line chart
+- Returns: "Based on the analysis, revenue peaked in December 2024
+  at $25,943, with a concerning downward trend starting in 2025..."</code></pre>
+    <p>The agent also showed the exact SQL query used, providing full transparency.</p>
+
+    <h3>Initial Results: It Worked!</h3>
+    <p>The system handled queries I threw at it:</p>
+    <ul>
+      <li>"What was total revenue last quarter?"</li>
+      <li>"Show me top 10 customers by revenue"</li>
+      <li>"How many active subscriptions do we have?"</li>
+    </ul>
+    <p>It generated accurate SQL, handled JOINs correctly, and created visualizations automatically. Response time was 10-15 seconds per query.</p>
+    <p>I was thrilled. Then I started thinking about scale.</p>
+
+    <h2>Part 2: Why This Would Break in Real Production</h2>
+
+    <h3>Problem 1: The Token Limit Wall</h3>
+    <p><strong>What happened:</strong> I'm passing the entire database schema with every query. Works fine for 3 tables (~500 tokens). Breaks completely at 100 tables (~50K tokens, exceeds context limit).</p>
+    <p><strong>The math:</strong></p>
+    <ul>
+      <li>Claude Sonnet 4: 200K token context window</li>
+      <li>Medium enterprise DB: 200-500 tables</li>
+      <li>Average table schema: 500-1000 tokens</li>
+      <li><strong>Result: Can't fit schema in context</strong></li>
+    </ul>
+    <p><strong>Real-world impact:</strong></p>
+    <ul>
+      <li>Demo: 3 tables ✅</li>
+      <li>Startup with 50 tables: Barely works ⚠️</li>
+      <li>Enterprise with 300 tables: Completely broken ❌</li>
+    </ul>
+
+    <h3>Problem 2: Cost Spirals Out of Control</h3>
+    <p><strong>Costs per query:</strong></p>
+    <ul>
+      <li>Input: 2K tokens (schema + question) = $0.006</li>
+      <li>Output: 500 tokens (SQL + explanation) = $0.0075</li>
+      <li><strong>Total: ~$0.02-0.05 per query</strong></li>
+    </ul>
+    <p><strong>At scale:</strong></p>
+    <ul>
+      <li>100 queries/day: $3-5/day = $90-150/month (manageable)</li>
+      <li>1,000 queries/day: $600-1,500/month (yikes)</li>
+      <li>10,000 queries/day: $6K-15K/month (unsustainable)</li>
+    </ul>
+    <p>Compare to traditional SQL where the query cost is essentially $0. <strong>The LLM approach is 1000x more expensive.</strong></p>
+
+    <h3>Problem 3: Latency Kills Adoption</h3>
+    <p><strong>My query timeline:</strong></p>
+    <ul>
+      <li>3 Claude API calls: ~2-3 seconds each = 6-9 seconds</li>
+      <li>Database query execution: 50-200ms</li>
+      <li>Chart generation: 500ms</li>
+      <li><strong>Total: 7-10 seconds per query</strong></li>
+    </ul>
+    <p><strong>User expectations:</strong></p>
+    <ul>
+      <li>Google search: &lt;1 second</li>
+      <li>SQL query in BI tool: 1-3 seconds</li>
+      <li>RAG agent: 10-15 seconds ❌</li>
+    </ul>
+
+    <h3>Problem 4: The "Last Mile" Problem</h3>
+    <p><strong>Some additional gaps in the real world:</strong></p>
+    <ul>
+      <li><strong>Business logic:</strong> "Revenue" = completed transactions only, exclude refunds, internal orders</li>
+      <li><strong>Data quality rules:</strong> Filter out test users with email ending in @test.com</li>
+      <li><strong>Temporal context:</strong> "Last quarter" depends on fiscal calendar, not calendar year</li>
+      <li><strong>Relationships:</strong> Some JOINs are valid but nonsensical in business context</li>
+    </ul>
+    <p><strong>Example failure:</strong></p>
+<pre><code>User: "Show me revenue last quarter"
+My agent: SELECT SUM(amount) FROM transactions WHERE date > '2024-10-01'
+
+Problem: Includes refunds, test transactions, wrong quarter definition
+Correct query: Much more complex with 5+ WHERE clauses</code></pre>
+    <p><strong>The LLM can't infer this from schema alone.</strong></p>
+
+    <h2>Part 3: What Production Systems Actually Do</h2>
+    <p><em>Then I researched how companies solve this at scale. Turns out the answer isn't "throw more LLM at it."</em></p>
+
+    <h3>Solution 1: Enterprise Platforms (Snowflake Cortex, Databricks Genie)</h3>
+    <p><strong>Semantic layer:</strong> Pre-define metrics once</p>
+<pre><code>revenue:
+  SUM(amount) WHERE status='completed' AND type!='refund'
+  description: "Total revenue from completed sales"</code></pre>
+    <p><strong>Vector-based retrieval:</strong> Embed table descriptions, retrieve only relevant 3-5 tables. <strong>Query optimization:</strong> Rewrite LLM SQL for performance. <strong>Aggressive caching:</strong> 90%+ cache hit rate.</p>
+    <p><strong>The results:</strong></p>
+    <ul>
+      <li>Cost: $0.001-0.01 per query (100x cheaper)</li>
+      <li>Latency: &lt;2 seconds</li>
+      <li>Accuracy: 90%+</li>
+      <li>Scale: Handles 1000+ table databases</li>
+    </ul>
+    <p><strong>Pros:</strong> Enterprise security/compliance, massive scale, vendor support, deep platform integration.</p>
+    <p><strong>Cons:</strong> Expensive ($50K-500K+/year), vendor lock-in, only works with their platform.</p>
+    <p><strong>Best for:</strong> Fortune 500s, large enterprises already on Snowflake/Databricks</p>
+
+    <h3>Solution 2: Specialized Startups (Seek AI, Patterns, Outerbase)</h3>
+    <p><strong>Fine-tuning:</strong> Train model on your specific schemas and past queries. <strong>Intent classification:</strong> Cheap model ($0.0001) routes 80% to templates, 20% to LLM. <strong>Query validation:</strong> Check for cartesian joins, missing WHERE clauses. <strong>Human-in-loop:</strong> Uncertain queries go to Slack for approval.</p>
+<pre><code>User: "Show me revenue"
+↓
+Intent classifier: "Simple aggregation" (no LLM needed)
+↓
+Template: SELECT SUM(amount) FROM transactions WHERE...
+↓
+Result in 500ms</code></pre>
+    <p><strong>The results:</strong> 90%+ accuracy (vs 60% with base models), $0.005-0.02 per query, 1-3 seconds latency, learns from corrections.</p>
+    <p><strong>Best for:</strong> Series A-C startups, mid-size companies (100-1K employees)</p>
+
+    <h3>Solution 3: Cloud-Native (BigQuery + Gemini, Athena + Bedrock)</h3>
+    <p>Uses existing cloud provider's LLM, schema embeddings stored in vector DB, query logs as training data, pay-as-you-go pricing.</p>
+    <p><strong>The tradeoff:</strong> Lower accuracy (60-70%) but "good enough". Less features but simpler. Cheaper but more DIY.</p>
+    <p><strong>Best for:</strong> AWS/GCP-native companies, cost-conscious teams</p>
+
+    <h3>Solution 4: Open Source (Transform, Cube.js, dbt, Metriql)</h3>
+    <p>Build semantic layer with dbt or Cube.js, custom query interface with Claude/GPT API, self-hosted caching (Redis), mix-and-match components.</p>
+<pre><code>Frontend: Custom Streamlit app
+Semantic layer: dbt metrics
+Query generation: Claude API
+Caching: Redis
+Data warehouse: Existing (Snowflake/BigQuery)
+
+Total cost: $5K-20K/year</code></pre>
+    <p><strong>Best for:</strong> Technical teams, early-stage startups, open-source advocates</p>
+
+    <h2>Part 4: The Decision Framework</h2>
+    <h3>Key Questions to Ask:</h3>
+    <p><strong>1. What's your scale?</strong></p>
+    <ul>
+      <li>&lt;100 queries/day: Any solution works</li>
+      <li>100-1K/day: Startup or cloud-native</li>
+      <li>1K-10K/day: Enterprise or open source</li>
+      <li>10K+/day: Enterprise only</li>
+    </ul>
+    <p><strong>2. What's your budget?</strong></p>
+    <ul>
+      <li>&lt;$5K/year: Open source only</li>
+      <li>$5K-20K/year: Open source or cloud-native</li>
+      <li>$20K-100K/year: Startups or cloud-native</li>
+      <li>$100K+/year: Enterprise platforms</li>
+    </ul>
+    <p><strong>3. How complex is your data?</strong></p>
+    <ul>
+      <li>&lt;20 tables: Any solution</li>
+      <li>20-100 tables: Need vector retrieval</li>
+      <li>100-500 tables: Enterprise or custom</li>
+      <li>500+ tables: Enterprise only</li>
+    </ul>
+    <p><strong>4. Do you have engineering resources?</strong></p>
+    <ul>
+      <li>No → Enterprise or startup solution</li>
+      <li>Yes, 1 engineer → Cloud-native or startup</li>
+      <li>Yes, 2+ engineers → Open source feasible</li>
+    </ul>
+
+    <h2>Part 5: What I'd Do Differently (v2 Roadmap)</h2>
+
+    <h3>1. Semantic Layer First</h3>
+    <p>Build business metric definitions before any LLM:</p>
+<pre><code>metrics:
+  mrr:
+    sql: SUM(monthly_price) WHERE status='active'
+    description: "Monthly Recurring Revenue"
+
+  churn_rate:
+    sql: (canceled / total) * 100
+    description: "Customer churn percentage"</code></pre>
+
+    <h3>2. Vector-Based Schema Retrieval</h3>
+    <p>Embed all table/column descriptions. User question → semantic search → retrieve 3-5 relevant tables only. Pass only relevant schema to LLM.</p>
+    <p><strong>Impact:</strong> Handles 500+ table databases</p>
+
+    <h3>3. Aggressive Caching</h3>
+<pre><code>@cache(ttl=3600)  # Cache for 1 hour
+def execute_query(sql):
+    return db.query(sql)</code></pre>
+    <p><strong>Impact:</strong> 80-90% cost reduction</p>
+
+    <h3>4. Tiered Approach</h3>
+<pre><code>Simple query (aggregation) → Template (0ms, $0)
+Medium query → Small model (500ms, $0.001)
+Complex query → Claude (3s, $0.02)</code></pre>
+    <p><strong>Impact:</strong> 85% of queries never hit expensive LLM</p>
+
+    <h3>5. Query Validation</h3>
+<pre><code>def validate_query(sql):
+    if "SELECT * FROM" in sql and "LIMIT" not in sql:
+        return "Error: Must include LIMIT"
+    if count_joins(sql) > 5:
+        return "Error: Too many JOINs"
+    return "Valid"</code></pre>
+    <p><strong>Impact:</strong> Prevent expensive/dangerous queries</p>
+
+    <h3>6. Fine-Tuning</h3>
+    <p>Collect 500-1000 successful query pairs. Fine-tune Llama 3 or Mistral on company data.</p>
+    <p><strong>Impact:</strong> 90% accuracy, $0.005/query (4x cheaper)</p>
+
+    <h2>Part 6: Key Takeaways</h2>
+
+    <p><strong>1. Demos ≠ Production.</strong> My demo worked perfectly for 10 queries. Production needs 10 million.</p>
+    <p><strong>2. Cost Compounds Quickly.</strong> $0.02 per query seems cheap until you multiply by 1000 queries/day x 365 days.</p>
+    <p><strong>3. LLMs Are Part of the Solution, Not the Whole Solution.</strong> Production systems minimize LLM usage through caching, templates, and tiered models.</p>
+    <p><strong>4. Business Logic > Schema.</strong> The schema tells you table structure. Business logic tells you what queries actually mean.</p>
+    <p><strong>5. There's No One-Size-Fits-All.</strong> Startups need different solutions than enterprises. Technical teams have different options than non-technical ones.</p>
+
+    <h3>The Pattern</h3>
+    <p><strong>Every successful production system:</strong></p>
+    <ul>
+      <li>Encodes business logic once (semantic layer)</li>
+      <li>Minimizes LLM calls (caching + templates)</li>
+      <li>Uses vector search for scale</li>
+      <li>Combines AI with traditional engineering</li>
+    </ul>
+
+    <h2>Version 2.0: The RAG Transformation</h2>
+    <p>After publishing v1.0, I rebuilt the agent with <strong>Retrieval-Augmented Generation (RAG)</strong> to address the core accuracy issues.</p>
+
+    <h3>What Changed</h3>
+    <p><strong>Knowledge Base (97 chunks, ~63KB):</strong></p>
+    <ul>
+      <li><code>metrics.md</code> - 15+ SaaS metrics with formulas (MRR, churn, LTV)</li>
+      <li><code>schema_docs.md</code> - Complete table documentation & relationships</li>
+      <li><code>business_logic.md</code> - 50+ query rules & best practices</li>
+      <li><code>examples.json</code> - 30 example query pairs</li>
+      <li><code>sqlite_syntax.md</code> - Database-specific syntax rules</li>
+    </ul>
+    <p><strong>RAG Pipeline:</strong> ChromaDB for vector storage, Sentence Transformers for embeddings, semantic search retrieves top-k relevant docs, context injected into LLM prompts.</p>
+
+    <h3>The Impact</h3>
+    <p><strong>Accuracy improvement: 50% → 90%</strong></p>
+    <p><strong>Before RAG (v1.0):</strong></p>
+<pre><code>Query: "What's our MRR growth rate?"
+Generated: SELECT SUM(amount) FROM subscriptions  ❌
+Issue: Doesn't account for billing cycles, churn, or time periods</code></pre>
+    <p><strong>After RAG (v2.0):</strong></p>
+<pre><code>Query: "What's our MRR growth rate?"
+Retrieved context: MRR formula, billing cycle handling, growth calculation
+Generated: ✅ Correct SQL with:
+- Billing cycle normalization (annual/12, quarterly/3)
+- Active subscription filtering
+- Month-over-month comparison</code></pre>
+
+    <h3>Key Learnings</h3>
+    <ol>
+      <li><strong>Context is everything</strong> - The LLM had the reasoning ability; it just lacked domain knowledge</li>
+      <li><strong>Quality > Quantity</strong> - 97 well-structured chunks outperformed throwing the entire schema at the model</li>
+      <li><strong>Examples matter</strong> - The <code>examples.json</code> file had outsized impact on complex queries</li>
+      <li><strong>Database-specific syntax</strong> - Adding SQLite rules eliminated an entire class of errors</li>
+    </ol>
+
+    <h2>Conclusion</h2>
+    <p>Self-serve analytics with LLMs isn't solved. It's just getting started. The gap between "working demo" and "production system" is enormous. But understanding that gap is the first step to bridging it.</p>
+
+    <div class="tag-list">
+      <span>LLM</span>
+      <span>SQL</span>
+      <span>Data Analysis</span>
+      <span>AI Analytics</span>
+      <span>Python</span>
+      <span>RAG</span>    </div>
+
+    <div class="article-footer">
+      <a href="https://www.linkedin.com/in/vyom-bhushan/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/Vyom-Data-Portfolio/RAG-analytics-agent" target="_blank">GitHub Repo</a>
+      <a href="https://medium.com/@vyombhushan/the-reality-of-text-to-sql-at-scale-cost-latency-and-what-actually-works-6b3af3f19041" target="_blank">Read on Medium</a>
     </div>
+
+  </div>
+</article>
+
+</body>
+</html>
+    </div>
+
+    <div class="article-footer">
+      <a href="https://www.linkedin.com/in/vyom-bhushan/" target="_blank">LinkedIn</a>
+      <a href="https://github.com/Vyom-Data-Portfolio/RAG-analytics-agent" target="_blank">GitHub Repo</a>
+      <a href="https://medium.com/@vyombhushan/the-reality-of-text-to-sql-at-scale-cost-latency-and-what-actually-works-6b3af3f19041" target="_blank">Read on Medium</a>
+    </div>
+
   </div>
 </article>
 
