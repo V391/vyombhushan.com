@@ -808,9 +808,8 @@ footer {
 /* ─── Blog Section ─── */
 .blog-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
-  max-width: 600px;
 }
 
 .blog-card {
@@ -1130,6 +1129,16 @@ footer {
         <span class="tech-tag">Text-to-SQL</span>
         <span class="tech-tag">LLMs</span>
         <span class="tech-tag">Production AI</span>
+      </div>
+    </a>
+    <a href="blog/event-analytics-agents.html" class="blog-card">
+      <div class="blog-date">Draft</div>
+      <h3>Event Analytics in the Age of Agents</h3>
+      <p>How Emisar used agent-led analytics to move from manual event inspection to journey summaries, targeted QC, and faster product judgment.</p>
+      <div class="blog-tags">
+        <span class="tech-tag">Event Analytics</span>
+        <span class="tech-tag">Agents</span>
+        <span class="tech-tag">Product Analytics</span>
       </div>
     </a>
   </div>
