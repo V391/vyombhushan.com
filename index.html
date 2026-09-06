@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vyom Bhushan</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23faf9f7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%2346620a' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -42,6 +42,8 @@ body {
   font-family: 'Sora', sans-serif;
   background: var(--bg);
   color: var(--text);
+  /* Anchors .footer-lattice; also clips it at the viewport edge. */
+  position: relative;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -110,19 +112,43 @@ section {
   padding-top: 100px;
 }
 
-.hero-monogram {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(6rem, 18vw, 14rem);
-  font-weight: 700;
-  color: transparent;
-  -webkit-text-stroke: 1.5px #16161a1f;
-  line-height: 0.85;
+/* Metatron's cube behind the hero. Decorative only - clipped by the hero
+   box so it can never widen the page or add scroll. */
+.hero-art {
   position: absolute;
-  right: -2%;
-  top: 18%;
-  user-select: none;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
+  user-select: none;
 }
+
+.hero-art .hero-wash {
+  position: absolute;
+  right: -12%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(760px, 78vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #46620a10 0%, transparent 68%);
+}
+
+.hero-art .hero-mark {
+  position: absolute;
+  right: -8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(700px, 72vw);
+  aspect-ratio: 1;
+  background: url('metatron.svg') center / contain no-repeat;
+  opacity: 0.85;
+}
+
+/* The hero text sits above the mark. */
+.hero-label,
+.hero h1,
+.hero-tagline { position: relative; z-index: 1; }
 
 .hero-label {
   font-family: 'Space Mono', monospace;
@@ -702,6 +728,21 @@ section {
 }
 
 /* ─── Footer ─── */
+/* Flower-of-life lattice behind the contact section and footer bar,
+   anchored to the bottom of the page and dissolving upward. */
+.footer-lattice {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 620px;
+  z-index: 0;
+  opacity: 0.5;
+  background: url('footer-lattice.svg') center bottom / cover no-repeat;
+  pointer-events: none;
+  user-select: none;
+}
+
 footer {
   position: relative;
   z-index: 1;
@@ -896,7 +937,11 @@ footer {
   nav { padding: 16px 20px; }
   .nav-links { gap: 20px; }
   .nav-links a { font-size: 0.78rem; }
-  .hero-monogram { display: none; }
+  /* Push the mark toward the edge so it frames the headline instead of
+     sitting under it. The handoff specifies desktop only. */
+  .hero-art { opacity: 0.6; }
+  .hero-art .hero-mark { right: -26%; width: min(520px, 88vw); }
+  .hero-art .hero-wash { right: -30%; width: min(560px, 94vw); }
   .about-content { grid-template-columns: 1fr; gap: 40px; }
   .projects-grid { grid-template-columns: 1fr; }
   .case-studies-grid { grid-template-columns: 1fr; }
@@ -929,7 +974,10 @@ footer {
 
 <!-- Hero -->
 <section class="hero">
-  <div class="hero-monogram">VB</div>
+  <div class="hero-art" aria-hidden="true">
+    <div class="hero-wash"></div>
+    <div class="hero-mark"></div>
+  </div>
   <div class="hero-label">Data &bull; Product &bull; AI & Analytics</div>
   <h1>Vyom<br>Bhushan<span>.</span></h1>
   <p class="hero-tagline">
@@ -1269,6 +1317,8 @@ footer {
     </div>
   </div>
 </section>
+
+<div class="footer-lattice" aria-hidden="true"></div>
 
 <!-- Footer -->
 <footer>
