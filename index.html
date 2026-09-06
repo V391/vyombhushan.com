@@ -12,20 +12,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vyom Bhushan</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0b'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%23c4f540' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23faf9f7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%2346620a' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0a0a0b;
-  --bg-card: #111113;
-  --bg-card-hover: #18181b;
-  --text: #f0f0f0;
-  --text-muted: #8a8a8e;
+  --bg: #faf9f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfefa;
+  --text: #16161a;
+  --text-muted: #5c5c63;
+  --text-body: #4a4a52;
+  --text-dim: #6f6b62;
+  /* Brand lime. Fills, borders and rules only - 1.8:1 on white, never text. */
   --accent: #c4f540;
-  --accent-dim: #c4f54025;
-  --border: #222226;
+  --accent-ink: #46620a;
+  --accent-dim: #f2f8dc;
+  --accent-dim-border: #dcecad;
+  --accent-dim-ink: #3c5208;
+  --border: #e5e3dd;
+  --shadow-card: 0 18px 40px #16161a12;
   --radius: 16px;
 }
 
@@ -39,14 +46,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--accent); color: var(--bg); }
+::selection { background: var(--accent); color: var(--text); }
 
 /* ─── Dot Grid Background ─── */
 .dot-grid {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
+  background-image: radial-gradient(circle, #16161a14 1px, transparent 1px);
   background-size: 28px 28px;
   pointer-events: none;
 }
@@ -62,7 +69,7 @@ nav {
   justify-content: space-between;
   align-items: center;
   backdrop-filter: blur(20px);
-  background: #0a0a0bcc;
+  background: #faf9f7cc;
   border-bottom: 1px solid var(--border);
 }
 
@@ -70,7 +77,7 @@ nav {
   font-family: 'Space Mono', monospace;
   font-weight: 700;
   font-size: 1.4rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: -1px;
 }
 
@@ -83,7 +90,7 @@ nav {
   letter-spacing: 0.5px;
   transition: color 0.3s;
 }
-.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover { color: var(--accent-ink); }
 
 /* ─── Sections ─── */
 section {
@@ -108,7 +115,7 @@ section {
   font-size: clamp(6rem, 18vw, 14rem);
   font-weight: 700;
   color: transparent;
-  -webkit-text-stroke: 1.5px #ffffff15;
+  -webkit-text-stroke: 1.5px #16161a1f;
   line-height: 0.85;
   position: absolute;
   right: -2%;
@@ -120,7 +127,7 @@ section {
 .hero-label {
   font-family: 'Space Mono', monospace;
   font-size: 0.75rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 3px;
   text-transform: uppercase;
   margin-bottom: 24px;
@@ -138,7 +145,7 @@ section {
   animation: fadeUp 0.8s 0.4s forwards;
 }
 
-.hero h1 span { color: var(--accent); }
+.hero h1 span { color: var(--accent-ink); }
 
 .hero-tagline {
   font-size: clamp(1rem, 2vw, 1.25rem);
@@ -172,16 +179,16 @@ section {
 
 .btn-primary {
   background: var(--accent);
-  color: var(--bg);
+  color: var(--text);
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px #c4f54040; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px #16161a1f; }
 
 .btn-outline {
   background: transparent;
   color: var(--text);
   border: 1px solid var(--border);
 }
-.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent-ink); }
 
 /* ─── Section Headers ─── */
 .section-header {
@@ -230,7 +237,7 @@ section {
 .about-text {
   font-size: 1.05rem;
   line-height: 1.85;
-  color: var(--text-muted);
+  color: var(--text-body);
   font-weight: 300;
 }
 
@@ -249,13 +256,13 @@ section {
   padding: 28px;
   transition: all 0.3s;
 }
-.stat-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.stat-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-card); }
 
 .stat-card .number {
   font-family: 'Space Mono', monospace;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-ink);
   margin-bottom: 6px;
 }
 
@@ -286,7 +293,7 @@ section {
 .skill-pill:hover {
   border-color: var(--accent);
   background: var(--accent-dim);
-  color: var(--accent);
+  color: var(--accent-dim-ink);
   transform: translateY(-2px);
 }
 
@@ -321,17 +328,13 @@ section {
   width: 100%;
   height: 3px;
   background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s;
 }
-.exp-card:hover::before { transform: scaleX(1); }
-.exp-card:hover { border-color: #333; transform: translateY(-6px); }
+.exp-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: var(--shadow-card); }
 
 .exp-card .company {
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 14px;
@@ -352,7 +355,7 @@ section {
 
 .exp-card .period {
   font-size: 0.75rem;
-  color: #555;
+  color: var(--text-dim);
   font-family: 'Space Mono', monospace;
   margin-bottom: 18px;
 }
@@ -381,7 +384,7 @@ section {
   transition: all 0.4s;
   position: relative;
 }
-.project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.project-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-card); }
 
 .project-card .icon {
   font-size: 2rem;
@@ -414,8 +417,11 @@ section {
   font-family: 'Space Mono', monospace;
   padding: 5px 12px;
   background: var(--accent-dim);
-  color: var(--accent);
+  color: var(--accent-dim-ink);
   border-radius: 50px;
+  /* Keeps hyphenated tags ("Text-to-SQL") from breaking across lines. */
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 /* ─── Pieces of Me (Flip Cards) ─── */
@@ -482,7 +488,7 @@ section {
 
 .flip-card-back p {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--text-body);
   line-height: 1.65;
   font-weight: 300;
 }
@@ -576,12 +582,12 @@ section {
 .contact-field textarea:focus {
   outline: none;
   border-color: var(--accent);
-  background: #0d0d0f;
+  background: var(--bg-card);
 }
 
 .contact-field input::placeholder,
 .contact-field textarea::placeholder {
-  color: #555;
+  color: #8a8578;
 }
 
 .contact-submit {
@@ -589,19 +595,22 @@ section {
   margin-top: 4px;
   padding: 14px 28px;
   background: var(--accent);
-  border: 1px solid var(--accent);
+  border: 1px solid #b3e232;
   border-radius: 50px;
-  color: var(--bg);
+  color: var(--text);
   font-family: 'Sora', sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
+  /* The grid track would otherwise squeeze this to "Send / Message". */
+  white-space: nowrap;
+  width: max-content;
 }
 
 .contact-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px #c4f54025;
+  box-shadow: 0 8px 24px #16161a1f;
 }
 
 .contact-email {
@@ -619,12 +628,12 @@ section {
 }
 
 .contact-email a:hover {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .copy-state {
   margin-left: 10px;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-family: 'Space Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 1px;
@@ -651,13 +660,16 @@ section {
   font-weight: 500;
   transition: all 0.3s;
 }
-.contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+.contact-link:hover { border-color: var(--accent); color: var(--accent-ink); transform: translateY(-2px); box-shadow: var(--shadow-card); }
 .contact-link svg { width: 18px; height: 18px; }
 
 /* ─── Marquee ─── */
 .marquee-section {
   position: relative;
   z-index: 1;
+  /* Sits between Pieces and Contact, so it needs its own breathing room. */
+  margin-top: 120px;
+  background: #f5f4f0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   padding: 20px 0;
@@ -680,7 +692,7 @@ section {
 
 .marquee-track span::after {
   content: '·';
-  color: var(--accent);
+  color: var(--accent-ink);
   padding-left: 40px;
 }
 
@@ -709,7 +721,7 @@ footer {
 
 .footer-copy {
   font-size: 0.75rem;
-  color: #444;
+  color: var(--text-dim);
 }
 
 /* ─── Scroll Animations ─── */
@@ -744,23 +756,19 @@ footer {
   position: relative;
   overflow: hidden;
 }
-.case-study:hover { border-color: #333; transform: translateY(-4px); }
+.case-study:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--shadow-card); }
 .case-study::before {
   content: '';
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 3px;
   background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s;
 }
-.case-study:hover::before { transform: scaleX(1); }
 
 .case-study .cs-company {
   font-family: 'Space Mono', monospace;
   font-size: 0.7rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -778,7 +786,7 @@ footer {
 .case-study .cs-label {
   font-family: 'Space Mono', monospace;
   font-size: 0.68rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 6px;
@@ -786,7 +794,7 @@ footer {
 
 .case-study .cs-text {
   font-size: 0.84rem;
-  color: var(--text-muted);
+  color: var(--text-body);
   line-height: 1.7;
   font-weight: 300;
 }
@@ -796,9 +804,10 @@ footer {
   margin-top: 20px;
   padding: 16px 20px;
   background: var(--accent-dim);
+  border: 1px solid var(--accent-dim-border);
   border-radius: 10px;
   font-size: 0.84rem;
-  color: var(--accent);
+  color: var(--accent-dim-ink);
   font-weight: 500;
   line-height: 1.6;
 }
@@ -807,61 +816,63 @@ footer {
 
 /* ─── Blog Section ─── */
 .blog-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .blog-card {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 36px;
+  padding: 40px 44px;
   transition: all 0.4s;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  display: block;
-  position: relative;
-  overflow: hidden;
 }
-.blog-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-.blog-card::after {
-  content: '→';
-  position: absolute;
-  top: 36px; right: 36px;
-  font-size: 1.2rem;
-  color: var(--accent);
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: all 0.3s;
-}
-.blog-card:hover::after { opacity: 1; transform: translateX(0); }
+.blog-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-card); }
 
 .blog-card .blog-date {
+  flex: 0 0 120px;
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   letter-spacing: 1px;
-  margin-bottom: 14px;
+  padding-top: 4px;
+}
+
+.blog-card .blog-body { flex: 1 1 420px; min-width: 0; }
+
+.blog-card .blog-arrow {
+  flex: 0 0 auto;
+  font-size: 1.2rem;
+  color: var(--accent-ink);
+  padding-top: 2px;
 }
 
 .blog-card h3 {
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.4px;
+  line-height: 1.3;
   margin-bottom: 12px;
-  padding-right: 30px;
+  text-wrap: pretty;
 }
 
 .blog-card p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.7;
+  font-size: 0.9rem;
+  color: var(--text-body);
+  line-height: 1.75;
   font-weight: 300;
+  max-width: 74ch;
 }
 
-.blog-card .blog-tags { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.blog-card .blog-tags { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
 
 .blog-placeholder {
   background: var(--bg-card);
@@ -876,7 +887,7 @@ footer {
   min-height: 200px;
 }
 
-.blog-placeholder .bp-icon { font-size: 2rem; margin-bottom: 16px; opacity: 0.4; }
+.blog-placeholder .bp-icon { font-size: 2rem; margin-bottom: 16px; opacity: 0.55; }
 .blog-placeholder p { color: var(--text-muted); font-size: 0.85rem; font-weight: 300; }
 
 /* ─── Responsive ─── */
@@ -889,7 +900,8 @@ footer {
   .about-content { grid-template-columns: 1fr; gap: 40px; }
   .projects-grid { grid-template-columns: 1fr; }
   .case-studies-grid { grid-template-columns: 1fr; }
-  .blog-grid { grid-template-columns: 1fr; }
+  .blog-card { padding: 28px 24px; gap: 16px; }
+  .blog-card h3 { font-size: 1.15rem; }
   .exp-card { flex: 0 0 300px; }
   .contact-card { padding: 24px; }
   .contact-form-row { grid-template-columns: 1fr; }
@@ -911,7 +923,7 @@ footer {
     <a href="#projects">My Work</a>
     <a href="#blog">Blog</a>
     <a href="#contact">Contact</a>
-    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">Resume ↓</a>
+    <a href="resume.pdf" target="_blank" rel="noopener noreferrer" style="color: var(--accent-ink); font-weight: 600;">Resume ↓</a>
   </div>
 </nav>
 
@@ -1123,23 +1135,29 @@ footer {
   <div class="blog-grid reveal">
     <a href="blog/text-to-sql.html" class="blog-card">
       <div class="blog-date">Jan 31, 2026</div>
-      <h3>The Reality of Text-to-SQL at Scale: Cost, Latency, and What Actually Works</h3>
-      <p>A deep dive into what happens when you try to ship NL-to-SQL in production - the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
-      <div class="blog-tags">
-        <span class="tech-tag">Text-to-SQL</span>
-        <span class="tech-tag">LLMs</span>
-        <span class="tech-tag">Production AI</span>
+      <div class="blog-body">
+        <h3>The Reality of Text-to-SQL at Scale: Cost, Latency, and What Actually Works</h3>
+        <p>A deep dive into what happens when you try to ship NL-to-SQL in production - the tradeoffs between cost, latency, accuracy, and the architecture decisions that actually matter.</p>
+        <div class="blog-tags">
+          <span class="tech-tag">Text-to-SQL</span>
+          <span class="tech-tag">LLMs</span>
+          <span class="tech-tag">Production AI</span>
+        </div>
       </div>
+      <div class="blog-arrow" aria-hidden="true">→</div>
     </a>
     <a href="blog/event-analytics-agents.html" class="blog-card">
       <div class="blog-date">May 5, 2026</div>
-      <h3>Event Analytics in the Age of Agents</h3>
-      <p>How Emisar used agent-led analytics to move from manual event inspection to journey summaries, targeted QC, and faster product judgment.</p>
-      <div class="blog-tags">
-        <span class="tech-tag">Event Analytics</span>
-        <span class="tech-tag">Agents</span>
-        <span class="tech-tag">Product Analytics</span>
+      <div class="blog-body">
+        <h3>Event Analytics in the Age of Agents</h3>
+        <p>How Emisar used agent-led analytics to move from manual event inspection to journey summaries, targeted QC, and faster product judgment.</p>
+        <div class="blog-tags">
+          <span class="tech-tag">Event Analytics</span>
+          <span class="tech-tag">Agents</span>
+          <span class="tech-tag">Product Analytics</span>
+        </div>
       </div>
+      <div class="blog-arrow" aria-hidden="true">→</div>
     </a>
   </div>
 </section>
@@ -1194,10 +1212,28 @@ footer {
   </div>
 </section>
 
+<!-- Marquee -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span>More is lost by indecision than a wrong decision</span>
+    <span>Action leads to motivation, not the other way round</span>
+    <span>If something is 99% done, it's closer to 0% than 100%</span>
+    <span>Cost of inaction is an exponentially increasing function</span>
+    <span>Decline is slow, but the collapse is sudden</span>
+    <span>Impatience with actions, patience with results</span>
+    <span>More is lost by indecision than a wrong decision</span>
+    <span>Action leads to motivation, not the other way round</span>
+    <span>If something is 99% done, it's closer to 0% than 100%</span>
+    <span>Cost of inaction is an exponentially increasing function</span>
+    <span>Decline is slow, but the collapse is sudden</span>
+    <span>Impatience with actions, patience with results</span>
+  </div>
+</div>
+
 <!-- Contact -->
 <section class="contact-section" id="contact">
   <div class="reveal">
-    <h2>Let's Connect<span style="color:var(--accent)">.</span></h2>
+    <h2>Let's Connect<span style="color:var(--accent-ink)">.</span></h2>
     <p>Always up for a conversation about data, AI, or the next big thing.</p>
     <div class="contact-card">
       <form action="https://formspree.io/f/mgodzvyk" method="POST" class="contact-form">
@@ -1234,29 +1270,11 @@ footer {
   </div>
 </section>
 
-<!-- Marquee -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <span>More is lost by indecision than a wrong decision</span>
-    <span>Action leads to motivation, not the other way round</span>
-    <span>If something is 99% done, it's closer to 0% than 100%</span>
-    <span>Cost of inaction is an exponentially increasing function</span>
-    <span>Decline is slow, but the collapse is sudden</span>
-    <span>Impatience with actions, patience with results</span>
-    <span>More is lost by indecision than a wrong decision</span>
-    <span>Action leads to motivation, not the other way round</span>
-    <span>If something is 99% done, it's closer to 0% than 100%</span>
-    <span>Cost of inaction is an exponentially increasing function</span>
-    <span>Decline is slow, but the collapse is sudden</span>
-    <span>Impatience with actions, patience with results</span>
-  </div>
-</div>
-
 <!-- Footer -->
 <footer>
   <div class="footer-location">📍 Based in India</div>
   <div class="footer-copy">&copy; 2025 Vyom Bhushan</div>
-  <div class="footer-copy" style="margin-top: 6px; color: #333;">built with curiosity & caffeine</div>
+  <div class="footer-copy" style="margin-top: 6px;">built with curiosity & caffeine</div>
 </footer>
 
 <script>
