@@ -12,129 +12,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Event Analytics in the Age of Agents - Vyom Bhushan</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0b'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%23c4f540' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23faf9f7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%2346620a' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article.css">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #0a0a0b;
-  --bg-card: #111113;
-  --text: #f0f0f0;
-  --text-muted: #8a8a8e;
-  --accent: #c4f540;
-  --accent-dim: #c4f54025;
-  --border: #222226;
-}
-
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: 'Sora', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-::selection { background: var(--accent); color: var(--bg); }
-
-.dot-grid {
-  position: fixed; inset: 0; z-index: 0;
-  background-image: radial-gradient(circle, #ffffff08 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-}
-
-nav {
-  position: fixed; top: 0; width: 100%; z-index: 100;
-  padding: 20px 40px;
-  display: flex; justify-content: space-between; align-items: center;
-  backdrop-filter: blur(20px);
-  background: #0a0a0bcc;
-  border-bottom: 1px solid var(--border);
-}
-
-.logo {
-  font-family: 'Space Mono', monospace;
-  font-weight: 700; font-size: 1.4rem;
-  color: var(--accent); letter-spacing: -1px;
-  text-decoration: none;
-}
-
-.back-link {
-  color: var(--text-muted); text-decoration: none;
-  font-size: 0.85rem; font-weight: 500;
-  transition: color 0.3s;
-}
-.back-link:hover { color: var(--accent); }
-
-article {
-  position: relative; z-index: 1;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 140px 40px 100px;
-}
-
-.article-meta {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--accent);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-}
-
-article h1 {
-  font-size: clamp(1.9rem, 4vw, 3rem);
-  font-weight: 700;
-  letter-spacing: -1.5px;
-  line-height: 1.2;
-  margin-bottom: 24px;
-}
-
-.article-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  font-weight: 300;
-  line-height: 1.7;
-  margin-bottom: 48px;
-  padding-bottom: 48px;
-  border-bottom: 1px solid var(--border);
-}
-
-.article-body h2 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  margin: 48px 0 16px;
-}
-
-.article-body p {
-  font-size: 1rem;
-  color: var(--text-muted);
-  line-height: 1.85;
-  margin-bottom: 20px;
-  font-weight: 300;
-}
-
-.article-body strong { color: var(--text); font-weight: 600; }
-
-.article-body ul {
-  padding-left: 24px;
-  margin-bottom: 20px;
-}
-
-.article-body li {
-  font-size: 1rem;
-  color: var(--text-muted);
-  line-height: 1.85;
-  font-weight: 300;
-  margin-bottom: 8px;
-}
+/* Article-specific visuals: the manual-workflow stack and the agent diagram.
+   Palette matches the site's light theme; the interactive .product-dfd below
+   is currently hidden in favour of the exported PNG, but is kept in step so
+   it renders correctly if re-enabled. */
 
 .visual-stack {
   display: grid;
@@ -162,7 +47,7 @@ article h1 {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, #ffffff0d 1px, transparent 1px);
+  background-image: radial-gradient(circle, #16161a0f 1px, transparent 1px);
   background-size: 22px 22px;
   opacity: 0.6;
   pointer-events: none;
@@ -173,7 +58,7 @@ article h1 {
   z-index: 1;
   font-family: 'Space Mono', monospace;
   font-size: 0.68rem;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 1.8px;
   text-transform: uppercase;
   margin-bottom: 18px;
@@ -183,7 +68,7 @@ article h1 {
   position: relative;
   z-index: 1;
   padding: 14px 16px;
-  background: #0d0d0f;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--text);
@@ -220,7 +105,7 @@ article h1 {
   height: 22px;
   display: grid;
   place-items: center;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
   opacity: 0.8;
@@ -239,7 +124,7 @@ article h1 {
   background: #f7f7f5;
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 18px 40px #16161a12;
 }
 
 .diagram-snapshot {
@@ -267,7 +152,7 @@ article h1 {
   background: var(--accent-dim);
   border: 1px solid var(--accent);
   border-radius: 16px;
-  color: var(--accent);
+  color: var(--accent-dim-ink);
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 1.5px;
@@ -291,7 +176,7 @@ article h1 {
   position: absolute;
   width: 170px;
   padding: 12px;
-  background: #0d0d0f;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--text);
@@ -312,22 +197,22 @@ article h1 {
   top: 0;
   width: 300px;
   transform: translateX(-50%);
-  border-color: #3f4d25;
+  border-color: var(--accent-dim-border);
   text-align: center;
 }
 .dfd-node.events { left: 0; top: 122px; animation-delay: 0.4s; }
 .dfd-node.database { left: 0; top: 260px; animation-delay: 0.8s; }
-.dfd-node.errors { left: 0; bottom: 0; border-color: #5c3a3a; animation-delay: 1.2s; }
-.dfd-node.guards { left: 50%; bottom: 0; transform: translateX(-50%); border-color: #3f4d25; animation-delay: 1.6s; }
+.dfd-node.errors { left: 0; bottom: 0; border-color: #e0bcbc; animation-delay: 1.2s; }
+.dfd-node.guards { left: 50%; bottom: 0; transform: translateX(-50%); border-color: var(--accent-dim-border); animation-delay: 1.6s; }
 .dfd-node.qc { right: 0; bottom: 0; animation-delay: 2s; }
-.dfd-node.funnel { right: 0; top: 122px; border-color: #3f4d25; animation-delay: 2.4s; }
-.dfd-node.insights { right: 0; top: 260px; border-color: #3f4d25; animation-delay: 2.8s; }
+.dfd-node.funnel { right: 0; top: 122px; border-color: var(--accent-dim-border); animation-delay: 2.4s; }
+.dfd-node.insights { right: 0; top: 260px; border-color: var(--accent-dim-border); animation-delay: 2.8s; }
 
 .dfd-flow {
   position: absolute;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0.28;
+  background: linear-gradient(90deg, transparent, var(--accent-ink), transparent);
+  opacity: 0.35;
 }
 
 .dfd-flow::after {
@@ -337,8 +222,8 @@ article h1 {
   top: -3px;
   width: 7px;
   height: 7px;
-  border-right: 1px solid var(--accent);
-  border-bottom: 1px solid var(--accent);
+  border-right: 1px solid var(--accent-ink);
+  border-bottom: 1px solid var(--accent-ink);
   transform: rotate(-45deg);
 }
 
@@ -353,7 +238,7 @@ article h1 {
   top: 73px;
   width: 1px;
   height: 115px;
-  background: linear-gradient(180deg, transparent, var(--accent), transparent);
+  background: linear-gradient(180deg, transparent, var(--accent-ink), transparent);
 }
 .dfd-flow.definitions::after {
   right: -3px;
@@ -367,7 +252,7 @@ article h1 {
   bottom: 100px;
   width: 1px;
   height: 118px;
-  background: linear-gradient(0deg, transparent, var(--accent), transparent);
+  background: linear-gradient(0deg, transparent, var(--accent-ink), transparent);
 }
 .dfd-flow.errors { left: 85px; }
 .dfd-flow.guards { left: 50%; }
@@ -385,8 +270,8 @@ article h1 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 18px #c4f54080;
+  background: var(--accent-ink);
+  box-shadow: 0 0 18px #46620a55;
   opacity: 0;
   animation: signalMove 4s linear infinite;
 }
@@ -411,33 +296,9 @@ article h1 {
   line-height: 1.65;
 }
 
-.article-footer {
-  margin-top: 60px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 16px;
-}
-
-.article-footer a {
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  padding: 8px 16px;
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  transition: all 0.3s;
-}
-
-.article-footer a:hover {
-  background: var(--accent);
-  color: var(--bg);
-}
-
 @keyframes manualPulse {
   0%, 72%, 100% { border-color: var(--border); color: var(--text); transform: translateX(0); }
-  8%, 18% { border-color: var(--accent); color: var(--accent); transform: translateX(4px); }
+  8%, 18% { border-color: var(--accent); color: var(--accent-ink); transform: translateX(4px); }
 }
 
 @keyframes arrowDrop {
@@ -447,7 +308,7 @@ article h1 {
 
 @keyframes hubGlow {
   0%, 100% { box-shadow: 0 0 0 #c4f54000; }
-  50% { box-shadow: 0 0 42px #c4f54020; }
+  50% { box-shadow: 0 0 42px #c4f54066; }
 }
 
 @keyframes agentNode {
@@ -489,8 +350,6 @@ article h1 {
 }
 
 @media (max-width: 768px) {
-  article { padding: 120px 20px 60px; }
-  nav { padding: 16px 20px; }
   #agent-diagram {
     width: calc(100vw - 32px);
     margin-left: calc(50% - (100vw - 32px) / 2);
@@ -501,7 +360,6 @@ article h1 {
 </head>
 <body>
 
-<div class="dot-grid"></div>
 
 <nav>
   <a href="../index.html" class="logo">VB</a>

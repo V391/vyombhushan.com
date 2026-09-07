@@ -1,0 +1,253 @@
+/* Shared chrome for every Build Log article.
+   Tokens are copied verbatim from index.html so the articles and the site
+   cannot drift apart again. Article-specific visuals stay in that article's
+   own <style> block. */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #faf9f7;
+  --bg-card: #ffffff;
+  --bg-card-hover: #fcfefa;
+  --text: #16161a;
+  --text-muted: #5c5c63;
+  --text-body: #4a4a52;
+  --text-dim: #6f6b62;
+  /* Brand lime. Fills, borders and rules only - 1.8:1 on white, never text. */
+  --accent: #c4f540;
+  --accent-ink: #46620a;
+  --accent-dim: #f2f8dc;
+  --accent-dim-border: #dcecad;
+  --accent-dim-ink: #3c5208;
+  --border: #e5e3dd;
+  --shadow-card: 0 18px 40px #16161a12;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: var(--text); }
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(20px);
+  background: #faf9f7cc;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--accent-ink);
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+.back-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+.back-link:hover { color: var(--accent-ink); }
+
+/* ─── Article shell ─── */
+article {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 140px 40px 100px;
+}
+
+.article-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent-ink);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+article h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  text-wrap: pretty;
+}
+
+.article-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-body);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+  text-wrap: pretty;
+}
+
+/* ─── Body copy ─── */
+.article-body h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 48px 0 16px;
+  text-wrap: pretty;
+}
+
+.article-body h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 32px 0 12px;
+  text-wrap: pretty;
+}
+
+.article-body p {
+  font-size: 1rem;
+  color: var(--text-body);
+  line-height: 1.85;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.article-body strong { color: var(--text); font-weight: 600; }
+
+.article-body a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.article-body code {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-dim-ink);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim-border);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.article-body pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+.article-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.article-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 16px 24px;
+  margin: 24px 0;
+  background: var(--accent-dim);
+  border-radius: 0 10px 10px 0;
+}
+
+.article-body blockquote p {
+  color: var(--text);
+  font-style: italic;
+  margin: 0;
+}
+
+.article-body ul, .article-body ol {
+  padding-left: 24px;
+  margin-bottom: 20px;
+}
+
+.article-body li {
+  font-size: 1rem;
+  color: var(--text-body);
+  line-height: 1.85;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+
+.article-body li::marker { color: var(--text-dim); }
+.article-body li strong { color: var(--text); }
+
+.article-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 48px 0;
+}
+
+/* ─── Tags + footer ─── */
+.tag-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.tag-list span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.article-footer {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.article-footer a {
+  color: var(--accent-ink);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 50px;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.article-footer a:hover {
+  background: var(--accent);
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  article { padding: 120px 20px 80px; }
+}

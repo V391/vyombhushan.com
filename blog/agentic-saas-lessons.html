@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RK8C06EQ1K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RK8C06EQ1K');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lessons from building an agentic SaaS - Vyom Bhushan</title>
+<meta name="description" content="What I learned building CareerCRM: why discovery is the real product risk, what web search and paid enrichment actually give you, and the four rules I now work by.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23faf9f7'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-weight='700' font-size='20' fill='%2346620a' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article.css">
+<style>
+/* Callout for the rules this piece is really about. */
+.rule {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim-border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 20px 24px;
+  margin: 28px 0;
+}
+
+.rule .rule-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent-dim-ink);
+  margin-bottom: 8px;
+}
+
+.rule p {
+  color: var(--text);
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.75;
+}
+
+/* The product's core path, shown once so the rest of the piece has a map. */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 28px 0;
+}
+
+.flow span {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+
+.flow span.hot {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim-border);
+  color: var(--accent-dim-ink);
+  font-weight: 700;
+}
+
+.flow i {
+  color: var(--text-dim);
+  font-style: normal;
+  font-size: 0.8rem;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">VB</a>
+  <a href="../index.html#blog" class="back-link">← Back to site</a>
+</nav>
+
+<article>
+  <div class="article-meta">Sep 8, 2026 · 9 min read</div>
+  <h1>Lessons from building an agentic SaaS</h1>
+  <p class="article-subtitle">I'm building a product whose first rule is <em>evidence or nothing</em>. Then I spent a full day debugging it on no evidence at all — and produced working code, passing tests, and a coherent plan aimed squarely at the wrong layer. That day, and the provider work around it, taught me more than the six weeks before it.</p>
+
+  <div class="article-body">
+
+    <h2>What I'm building</h2>
+
+    <p><strong>CareerCRM</strong> is an evidence-backed job-search operating system. It finds real roles, real people, and real reasons you fit — and it is built specifically to never invent any of them.</p>
+
+    <p>That constraint is the whole product. The tools in this space push hard in the other direction. Auto-apply bots optimise for volume, which is precisely what employers filter out. AI resume tools generate confident prose with nothing underneath it. Enrichment platforms built for sales pipelines will hand you a guessed email address and call it a lead. All of them are willing to fabricate, because fabrication is cheap and the cost lands on the candidate, who never finds out why the outreach went nowhere.</p>
+
+    <p>So CareerCRM runs on a few rules that are deliberately expensive to keep. Every employer, person, role link and email carries provenance or an explicit unknown state. A referral target needs a name, a current relevant title, an employer match and a public source URL — the email address is optional. The user always sends; drafts are reviewed, Gmail needs explicit approval, LinkedIn stays manual. And the funnel only counts an application when the user says they applied.</p>
+
+    <p>The core path looks like this:</p>
+
+    <div class="flow">
+      <span>Resume</span><i>→</i>
+      <span class="hot">Role discovery</span><i>→</i>
+      <span>Tracker</span><i>→</i>
+      <span>Workspace</span><i>→</i>
+      <span class="hot">People &amp; referral paths</span><i>→</i>
+      <span>Draft</span><i>→</i>
+      <span>You approve &amp; send</span>
+    </div>
+
+    <p>I build it solo — Next.js, TypeScript, Supabase — which matters to this story, because there was nobody in the room to ask the obvious question.</p>
+
+    <h2>Discovery is the hard part</h2>
+
+    <p>The two highlighted steps are where the product lives or dies. Everything downstream is workflow, and workflow is tractable. Discovery is not.</p>
+
+    <p>Turning a company into named, relevant, hiring-route people with source URLs and usable next actions is the core product risk, not a secondary enrichment step bolted on at the end. If that step is unreliable, the rest of the product is an elaborate wrapper around a guess — which is the exact thing I built it to avoid.</p>
+
+    <p>So I spend a lot of time on discovery. On 20 August, I spent an entire day on it. Here is what that day actually produced.</p>
+
+    <h2>The fixture that wasn't the product</h2>
+
+    <p>The day started with a symptom: role discovery returned zero rows.</p>
+
+    <p>Except it didn't. What returned zero rows was a hand-written candidate-profile fixture I had authored myself, paired with a deliberately hard prompt I had also authored myself. I ran that combination, watched it come back empty, and wrote down "v1 returns 0 rows" as a fact about the product.</p>
+
+    <p>It was a fact about the fixture.</p>
+
+    <p>Then I did the thing that turns a small mistake into a lost day: I changed three variables at once. A provider pin, the synthetic profile, and the harder prompt — all in the same step. When the result was still zero, I attributed that zero to the engine. There was no way for it to tell me otherwise. I had removed every path by which the system could contradict me.</p>
+
+    <p>The evidence that would have ended this was already on disk, and had been the whole time. The application stores its runs. There were 47 real ones sitting in <code>data/careercrm.json</code>, including a complete production run from twelve days earlier that showed exactly what the system does with a real profile.</p>
+
+    <p>I opened it in the tenth hour.</p>
+
+    <div class="rule">
+      <div class="rule-label">Rule 1</div>
+      <p>Reproduce the real input before diagnosing it. A fixture you wrote tests your assumptions, not the product. And read the telemetry you already have before you generate more.</p>
+    </div>
+
+    <h2>The cleanup that would have broken production</h2>
+
+    <p>This is the part I find genuinely uncomfortable, because it nearly shipped.</p>
+
+    <p>Somewhere in the fog, I noticed a search provider still running that I believed had been retired for v1. That reads as an obvious win: dead code still burning API credits. A billing leak. I traced it, wrote the fix, and recommended it for deployment.</p>
+
+    <p>Then I opened that stored production run.</p>
+
+    <p>What it showed: the primary web-search provider aborts at CareerCRM's own 25-second timeout, returning zero candidates. After that, the provider I had just labelled dead code takes over and seeds the structured ATS feeds — and those feeds produce all eight of the jobs the user actually sees.</p>
+
+    <p>It wasn't a leak. It was the thing carrying the feature. Deploying my fix would have taken a working search to zero, and it would have looked like a tidy-up in the diff.</p>
+
+    <p>This is what makes drift dangerous rather than merely wasteful. A bad diagnosis costs you a day. A confident cleanup built on a bad diagnosis costs you the feature, and it arrives dressed as an improvement, with a clean rationale and a small footprint.</p>
+
+    <div class="rule">
+      <div class="rule-label">Rule 2</div>
+      <p>Before deleting anything that looks redundant, prove what it carries in a real run. "Provider X should not be running" is a hypothesis about intent. It is not evidence about behaviour.</p>
+    </div>
+
+    <h2>The rule that didn't survive contact</h2>
+
+    <p>I had already written the rule that should have contained the damage. In the same file as these notes: no live paid run without stating the scope, the estimated maximum cost, and the stop condition first. A single test run stays under fifty cents unless I explicitly approve more for that exact run.</p>
+
+    <p>I blew through it that same day. Three paid runs, and not one of them was spent on the product — they were spent on bugs in the QA harness I had built to measure the product. I never validated the instrument before I started spending real money through it.</p>
+
+    <p>A written rule does not survive drift unless something enforces it. Mine was a sentence in a markdown file, which is to say it was a good intention with no teeth. The version with teeth is a stored historical run: when the question is "what does the system already do", the answer is almost always already on disk, and it costs nothing to read.</p>
+
+    <div class="rule">
+      <div class="rule-label">Rule 3</div>
+      <p>Validate the measuring instrument before you spend anything through it. And prefer a stored run to a fresh paid one whenever the question is about behaviour you have already observed.</p>
+    </div>
+
+    <h2>What the search work actually taught me</h2>
+
+    <p>Underneath the lost day, the provider work did produce real findings. Stripped of vendor names — these were dated evaluations against my benchmark, not standing verdicts on anybody's product — they came out like this.</p>
+
+    <p><strong>Web search finds candidate URLs, not truth.</strong> It will surface plausible people, but snippet extraction alone is brittle: it cheerfully mistakes page titles and article fragments for human beings. Users notice this instantly, and it is corrosive to trust in a way that a missing result never is. A wrong name is worse than no name.</p>
+
+    <p><strong>Rate limits look exactly like "the feature is broken."</strong> When a provider throttles and the failure isn't surfaced, the workflow appears to simply do nothing. Diagnostics are not a debugging luxury here; without them, an operational condition is indistinguishable from a logic bug — and you will go looking for the bug.</p>
+
+    <p><strong>Paid enrichment is a precision fallback, not a default path.</strong> One provider returned relevant, correctly-named people in a constrained live probe and was genuinely good. Its credit model also made it far too expensive to call for every company and every person. Quality per call and quality per dollar are different metrics, and only one of them survives contact with a real user base.</p>
+
+    <p><strong>Free tiers lie by omission.</strong> One provider's key authenticated perfectly and then refused the only two endpoints the workflow needed. Another returned billing errors on some runs and zero usable people across many benchmark companies. Authentication succeeding tells you nothing about whether the plan permits the thing you are about to build on.</p>
+
+    <p><strong>Crawling complements search; it does not replace it.</strong> In-house crawling is good at fetching and parsing pages you already know about. It is no substitute for discovering off-site profiles, team pages, speaker bios and directory listings in the first place. The workable shape is: search for candidate URLs, crawl what you're permitted to crawl, extract and rank, then spend money on enrichment selectively.</p>
+
+    <h2>The actual fix: discovery as employer intelligence</h2>
+
+    <p>All of the above are symptoms of one architectural mistake, and naming it was the most valuable thing to come out of the whole exercise.</p>
+
+    <p>I had been treating live search results as the source of truth for discovery. They are not. Search returns URLs and snippets; it does not return canonical employers. Building on that foundation produces an endless patch loop — job boards, ATS pages, directories, recruiters, thin snippets, duplicate domains, weak remote and visa signals, publishers who aren't employers at all. Every fix is a special case, and the special cases never stop arriving, because the underlying entity was never right.</p>
+
+    <p>The core entity for discovery should be a <strong>canonical employer object, keyed by a trusted company domain</strong>. Search becomes evidence and enrichment feeding that object — never the object itself. Candidate generation starts from an employer index, applies evidence gates specific to each bucket of results, then ranks verified employers against the user's resume and target criteria.</p>
+
+    <p>That reframing also makes the system measurable, which the old one never was. The bar I set:</p>
+
+    <ul>
+      <li>A <strong>stable top-20 per bucket</strong> across repeated runs — same inputs, same results, which the search-as-truth design could never guarantee</li>
+      <li><strong>More than 95% real employers</strong> in those results</li>
+      <li><strong>100% evidence coverage</strong> — every single result carries its provenance, or it does not ship</li>
+    </ul>
+
+    <p>Note that these are properties of the output, not of the pipeline. That is deliberate. It is very easy to build a discovery system that is impressive internally and unreliable externally.</p>
+
+    <h2>The process problem underneath all of it</h2>
+
+    <p>Doing a retrospective honestly means admitting the day wasn't an anomaly. It was the predictable output of how I had been working.</p>
+
+    <p>Too many closed decisions lived only in chat. A decision that exists as a conversation is not closed — it is remembered, and memory is exactly what drift corrodes. A decision is closed when it is encoded as a test, a decision document, a component or API invariant, or a line on a release checklist. Everything short of that is a plan to remember something later, under worse conditions.</p>
+
+    <p>The rework I've absorbed traces almost entirely to three things: weak decision retention, a large dirty working tree, and QA that reliably caught compile failures while missing workflow regressions completely. Type-checking proves the code compiles. It says nothing about whether resume → role discovery → people → draft → send still works end to end, which is the only question that matters.</p>
+
+    <div class="rule">
+      <div class="rule-label">Rule 4</div>
+      <p>A decision is not closed until it is encoded as a test, a decision doc, an invariant, or a checklist item. Small commits, golden-path coverage, deploys from known commits — and freeze adjacent feature work unless it protects the core path.</p>
+    </div>
+
+    <h2>Confidence should decay with distance from observation</h2>
+
+    <p>If I compress the whole day into one line, it is that.</p>
+
+    <p>Context drift is what happens when your working model of a system quietly diverges from the real system while your confidence stays exactly where it was. It is not the same as being wrong. Being wrong is loud — things fail, tests break, something obviously doesn't work. Drift is silent, and it is productive. It produces clean code, green tests, and a plan that hangs together beautifully, all pointed at a layer of the system that was never the problem.</p>
+
+    <p>The tell is not in the output. The output looks fine. The tell is in the gap between how sure you feel and when you last looked at something real — a production run, a stored payload, an actual user session. If that gap is ten hours wide, your confidence is no longer attached to anything.</p>
+
+    <p>Which is the uncomfortable symmetry here. I am building a product whose entire promise is that it will not assert things it cannot evidence — no guessed hiring managers, no inferred addresses, no company that isn't actually hiring. Every result carries provenance or an explicit unknown. Then I spent a day asserting things about my own system with no provenance whatsoever, and I nearly shipped a fix that would have proven it.</p>
+
+    <p>The standard I hold the product to is the one I should have been holding myself to. Evidence, or an explicit unknown. There isn't a third option, and there especially isn't one called "I'm fairly sure."</p>
+
+  </div>
+
+  <div class="tag-list">
+    <span>AI Agents</span>
+    <span>Debugging</span>
+    <span>Process</span>
+    <span>Product Engineering</span>
+    <span>Search</span>
+  </div>
+
+  <div class="article-footer">
+    <a href="https://careercrm.ai" target="_blank" rel="noopener noreferrer">CareerCRM</a>
+    <a href="https://www.linkedin.com/in/vyom-bhushan/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  </div>
+
+</article>
+
+</body>
+</html>
