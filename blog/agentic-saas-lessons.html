@@ -89,17 +89,33 @@
 </nav>
 
 <article>
-  <div class="article-meta">Sep 8, 2026 · 9 min read</div>
+  <div class="article-meta">Sep 8, 2026 · 11 min read</div>
   <h1>Lessons from building an agentic SaaS</h1>
   <p class="article-subtitle">I built CareerCRM on a single rule: evidence or nothing. Then I spent a full day debugging it on no evidence at all — and came away with working code, passing tests, and a coherent plan aimed squarely at the wrong layer. Here is what that day, and the provider work around it, actually taught me.</p>
 
   <div class="article-body">
 
+    <h2>Why I built it</h2>
+
+    <p>Job searching is one of the highest-stakes things a person does, and it runs with no feedback loop at all.</p>
+
+    <p>You send an application into a form and then nothing comes back. Not a rejection you can learn from — nothing. And when a rejection does arrive it is a template, which is the same as nothing. So you never find out which part failed. Was the resume wrong for that req? Were you two years too junior? Had the role already been filled internally before it was posted? Did a keyword filter drop you before a human ever loaded the page? Every one of those has a different fix, and you cannot tell them apart from the outside.</p>
+
+    <p>That matters more than it sounds, because every other skill improves the same way: you try something, you observe what happened, you adjust, you go again. Break the observation step and the loop stops being a loop. You are not practising any more, you are just repeating. Months of effort can produce no learning whatsoever, and the person doing it has no way to know that is what's happening.</p>
+
+    <p>Which leaves exactly one lever anyone can actually pull: volume.</p>
+
+    <p>This is what Easy Apply really is. It is a slot machine button. The cost of a pull is near zero, the payout is rare and unpredictable, and that combination — a reward on a variable schedule for an action that costs nothing — is the most compulsive design pattern we know of. So people spam it. Fifty applications, two hundred, five hundred. It feels productive because the counter goes up, and the counter going up is the only signal the system ever gives back.</p>
+
+    <p>But the counter is not the metric. Two hundred applications with no callbacks is not two hundred data points. It is one data point, repeated two hundred times, and you still don't know what it says. The machine took your pull and told you nothing.</p>
+
+    <p>The tools built for this market mostly make that worse rather than better, because they optimise the pull rate. Auto-apply bots maximise volume, which is precisely the signal employers filter out first. AI resume tools generate confident prose with nothing underneath it. Enrichment platforms built for sales pipelines will hand you a guessed email address and call it a lead. All of them fabricate, because fabrication is cheap and the cost lands on the candidate — who, of course, never finds out why the outreach went nowhere. The feedback loop is broken there too.</p>
+
     <h2>What I built</h2>
 
-    <p><strong>CareerCRM</strong> is an evidence-backed job-search operating system. It finds real roles, real people, and real reasons you fit — and it was built specifically to never invent any of them.</p>
+    <p><strong>CareerCRM</strong> is an evidence-backed job-search operating system, and it is a bet that the fix is not more pulls — it is fewer, aimed better, each one carrying a reason it should land.</p>
 
-    <p>That constraint drove every decision. The tools in this space push hard the other way. Auto-apply bots optimise for volume, which is precisely what employers filter out. AI resume tools generate confident prose with nothing underneath it. Enrichment platforms built for sales pipelines will hand you a guessed email address and call it a lead. All of them fabricate, because fabrication is cheap and the cost lands on the candidate, who never finds out why the outreach went nowhere.</p>
+    <p>It finds real roles, real people, and real reasons you fit, and it was built specifically to never invent any of them. Instead of firing applications into a void, the unit of work is a named person at a verified employer with a public source URL and a drafted, specific reason to talk to you. That is a target you can evaluate before you spend anything on it, which is the closest thing to feedback the process allows.</p>
 
     <p>So I built on a few rules that were deliberately expensive to keep. Every employer, person, role link and email carries provenance or an explicit unknown state. A referral target needs a name, a current relevant title, an employer match and a public source URL — the email address is optional. The user always sends: drafts get reviewed, Gmail needs explicit approval, LinkedIn stays manual. And the funnel only counts an application when the user says they applied.</p>
 
