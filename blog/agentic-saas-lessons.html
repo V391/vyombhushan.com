@@ -97,7 +97,7 @@
 
     <h2>Why I built it</h2>
 
-    <p>Job searching is one of the highest-stakes things a person does, and it runs with no feedback loop at all.</p>
+    <p>Job searching is one of the highest-stakes outreach operations an average professional will ever run — and it comes with no feedback loop at all.</p>
 
     <p>You send an application into a form and then nothing comes back. Not a rejection you can learn from — nothing. And when a rejection does arrive it is a template, which is the same as nothing. So you never find out which part failed. Was the resume wrong for that req? Were you two years too junior? Had the role already been filled internally before it was posted? Did a keyword filter drop you before a human ever loaded the page? Every one of those has a different fix, and you cannot tell them apart from the outside.</p>
 
@@ -139,11 +139,11 @@
 
     <p>Turning a company into named, relevant, hiring-route people with source URLs and usable next actions was the core product risk — not a secondary enrichment step to bolt on at the end. I had originally scoped it as the latter. That was wrong. If that step is unreliable, the rest of the product is an elaborate wrapper around a guess, which is the exact thing I built it to avoid.</p>
 
-    <p>So discovery took most of my time. On 20 August it took an entire day, and produced nothing I intended.</p>
+    <p>So discovery consumed most of the build. 20 August stands out not because it was the day I spent on it, but because it was the day I spent entirely inside a diagnosis that had been wrong since the first hour.</p>
 
     <h2>Lesson 2: I diagnosed a fixture and called it the product</h2>
 
-    <p>The day started with a symptom: role discovery returned zero rows.</p>
+    <p>The day started with a symptom. Role discovery — the search agent that takes a resume and returns a ranked list of live, verified roles, and the piece I was then calling v1 — came back with zero rows.</p>
 
     <p>Except it hadn't. What returned zero rows was a hand-written candidate-profile fixture I had authored myself, paired with a deliberately hard prompt I had also authored myself. I ran that combination, watched it come back empty, and wrote down "v1 returns 0 rows" as a fact about the product.</p>
 
